@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Home Control</title> 
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 393px;
+            height: 852px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* 로그인 화면 스타일 */
+        .login-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 20px;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .logo span {
+            display: block;
+        }
+
+        .input-field {
+            width: 80%;
+            padding: 15px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+
+        .dropdown {
+            width: 80%;
+            padding: 15px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+
+        .start-btn, .signup-btn {
+            background-color: #000;
+            color: white;
+            border-radius: 5px;
+            padding: 15px;
+            width: 100%;
+            font-size: 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.2s, background-color 0.3s;
+        }
+
+        .signup-btn {
+            margin-bottom: 20px;
+        }
+
+        .start-btn:hover, .signup-btn:hover {
+            transform: scale(1.05);
+            background-color: #333;
+        }
+
+        /* 메인 페이지 스타일 */
+        .main-screen {
+            display: none;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            margin: 0;
+            color: #000;
+        }
+
+        .header .date {
+            font-size: 14px;
+            color: #000;
+        }
+
+        .device-card {
+            background-color: white;
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s, box-shadow 0.3s;
+        }
+
+        .device-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .device-dashboard {
+            max-height: 500px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .device-dashboard::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .device-dashboard::-webkit-scrollbar-track {
+            background: #f2f2f2;
+        }
+
+        .device-dashboard::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            overflow-x: auto;
+            padding: 10px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            font-size: 16px;
+            color: #000;
+            margin-right: 20px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #333;
+        }
+
+        .navbar a.active {
+            font-weight: bold;
+        }
+
+        .navbar::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .navbar::-webkit-scrollbar-track {
+            background: #f2f2f2;
+        }
+
+        .navbar::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        .button {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, background-color 0.3s;
+        }
+
+        .button:hover {
+            transform: scale(1.05);
+            background-color: #333;
+        }
+
+        .my-page-btn {
+            margin-top: 10px;
+            background-color: #444;
+        }
+
+        /* 마이페이지 스타일 */
+        .my-page-screen {
+            display: none;
+            padding: 20px;
+        }
+
+        .back-btn {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 10px;
+            text-align: center;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 20px;
+            transition: transform 0.2s, background-color 0.3s;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+            background-color: #333;
+        }
+
+        .toggle-btn {
+            background-color: #ccc;
+            border: none;
+            border-radius: 20px;
+            width: 50px;
+            height: 30px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-btn::after {
+            content: "";
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            background-color: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: left 0.3s;
+        }
+
+        .toggle-btn.active {
+            background-color: #4caf50;
+        }
+
+        .toggle-btn.active::after {
+            left: 22px;
+        }
+
+        /* 모달 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 20% auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            width: 90%;
+            max-width: 350px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #333;
+            text-decoration: none;
+        }
+
+        .modal label {
+            font-size: 18px;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .modal input[type="number"],
+        .modal input[type="time"],
+        .modal select {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="appContainer">
+        <!-- 로그인 화면 -->
+        <div class="login-screen" id="loginScreen">
+            <div class="logo">
+                <span>Megazone</span>
+                <span>Home Control</span>
+            </div>
+            <input id="userName" class="input-field" type="text" placeholder="ID">
+            <input id="userPassword" class="input-field" type="password" placeholder="비밀번호">
+            </select>
+            <button class="start-btn" onclick="login()">로그인</button>
+            <button class="signup-btn" onclick="goToSignup()">회원가입</button>
+        </div>
+    <!-- 회원가입 화면 -->
+    <div class="signup-screen" id="signupScreen" style="display: none;">
+        <div class="logo">
+            <span>회원가입</span>
+        </div>
+        <input id="signupID" class="input-field" type="text" placeholder="ID">
+        <input id="signupPassword" class="input-field" type="password" placeholder="비밀번호">
+        <input id="signupName" class="input-field" type="text" placeholder="이름">
+        <input id="signupContact" class="input-field" type="tel" placeholder="연락처">
+        <button class="signup-btn" onclick="signup()">회원가입 완료</button>
+        <button class="back-btn" onclick="goToLogin()">뒤로가기</button>
+    </div>
+    <script>
+        function goToSignup() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('signupScreen').style.display = 'block';
+        }
+    
+        function goToLogin() {
+            document.getElementById('signupScreen').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'block';
+        }
+    
+        function signup() {
+            const id = document.getElementById('signupID').value.trim();
+            const password = document.getElementById('signupPassword').value.trim();
+            const name = document.getElementById('signupName').value.trim();
+            const contact = document.getElementById('signupContact').value.trim();
+    
+            if (id && password && name && contact) {
+                const userData = { id, password, name, contact };
+                localStorage.setItem("user", JSON.stringify(userData));
+                alert("회원가입이 완료되었습니다.");
+                goToLogin();
+            } else {
+                alert("모든 정보를 입력해주세요.");
+            }
+        }
+
+        function login() {
+            const id = document.getElementById('userName').value;
+            const password = document.getElementById('userPassword').value;
+            const storedUser = JSON.parse(localStorage.getItem("user"));  // 저장된 사용자 정보 가져오기
+
+            if (storedUser && storedUser.id === id && storedUser.password === password) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('deviceDashboard').style.display = 'block';
+            } else {
+                alert("ID 또는 비밀번호가 일치하지 않습니다.");
+            }
+        }
+        function goToMyPage() {
+            const storedUser = JSON.parse(localStorage.getItem("user"));
+
+            if (storedUser) {
+                document.getElementById('userNameDisplay').textContent = storedUser.id;
+                document.getElementById('userRealNameDisplay').textContent = storedUser.name;
+                document.getElementById('userContactDisplay').textContent = storedUser.contact;
+                document.getElementById('deviceDashboard').style.display = 'none';
+                document.getElementById('myPageScreen').style.display = 'block';
+            }
+        }
+
+        function goToMainPage() {
+            document.getElementById('myPageScreen').style.display = 'none';
+            document.getElementById('deviceDashboard').style.display = 'block';
+        }
+
+        function logout() {
+        document.getElementById('myPageScreen').style.display = 'none';
+        document.getElementById('loginScreen').style.display = 'block';
+        document.getElementById('deviceDashboard').style.display = 'none';
+        }
+    </script>
+            <!-- 기기 대시보드 -->
+            <div class="device-dashboard" id="deviceDashboard" style="display: none;">
+                <!-- 거실 -->
+                <div class="device-card" data-section="livingRoom">
+                    <div>
+                        <h2>조명</h2>
+                    </div>
+                    <button class="toggle-btn" onclick="toggleDevice(this)"></button>
+                </div>
+                <div class="device-card" data-section="livingRoom">
+                    <div>
+                        <h2>에어컨</h2>
+                        <p id="acSettings"></p>
+                    </div>
+                    <button class="toggle-btn" onclick="toggleDevice(this); openModal('acModal')"></button>
+                </div>
+
+            <!-- 마이페이지 이동 버튼 -->
+            <button class="button my-page-btn" onclick="goToMyPage()">마이페이지</button>
+        </div>
+
+        <!-- 마이페이지 -->
+        <div class="my-page-screen" id="myPageScreen" style="display: none;">
+            <h2>마이페이지</h2>
+            <p>ID: <span id="userNameDisplay"></span></p>
+            <p>이름: <span id="userRealNameDisplay"></span></p>
+            <p>연락처: <span id="userContactDisplay"></span></p>
+            <button class="back-btn" onclick="goToMainPage()">뒤로가기</button>
+            <button class="back-btn" onclick="logout()">로그아웃</button>
+        </div>
+    
+
+        <!-- 에어컨 모달 -->
+        <div id="acModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('acModal')">&times;</span>
+                <h2>에어컨 설정</h2>
+                <label>온도 조절: <input type="number" id="acTemperature" min="16" max="30"> °C</label>
+                <br><br>
+                <label>예약 설정: <input type="time" id="acSchedule"></label>
+                <br><br>
+                <button onclick="saveACSettings()">저장</button>
+            </div>
+        </div>
+    <script>
+
+            function goToMyPage() {
+            const storedUser = JSON.parse(localStorage.getItem("user"));
+
+            if (storedUser) {
+                document.getElementById('userNameDisplay').textContent = storedUser.id;
+                document.getElementById('userRealNameDisplay').textContent = storedUser.name;
+                document.getElementById('userContactDisplay').textContent = storedUser.contact;
+                document.getElementById('deviceDashboard').style.display = 'none';
+                document.getElementById('myPageScreen').style.display = 'block';
+            }
+        }
+        function goToMainPage() {
+            document.getElementById('myPageScreen').style.display = 'none';
+            document.getElementById('deviceDashboard').style.display = 'block';
+
+        function logout() {
+            document.getElementById('myPageScreen').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'block';
+    }
+        
+        }
+        function showSection(section) {
+            const deviceCards = document.querySelectorAll('.device-card');
+            deviceCards.forEach(card => {
+                if (card.getAttribute('data-section') === section) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function toggleDevice(button) {
+            button.classList.toggle('active');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function saveACSettings() {
+            const temperature = document.getElementById('acTemperature').value;
+            const schedule = document.getElementById('acSchedule').value;
+            const settings = `온도: ${temperature}°C, 예약: ${schedule}`;
+
+            document.querySelectorAll('#acSettings, #acSettingsBedroom, #acSettingsKitchen').forEach(el => {
+                el.textContent = settings;
+            });
+
+            closeModal('acModal');
+        }
+
+        function saveBoilerSettings() {
+            const temperature = document.getElementById('boilerTemperature').value;
+            const schedule = document.getElementById('boilerSchedule').value;
+            const settings = `온도: ${temperature}°C, 예약: ${schedule}`;
+
+            document.querySelectorAll('#boilerSettings, #boilerSettingsBedroom, #boilerSettingsKitchen, #boilerSettingsLaundry').forEach(el => {
+                el.textContent = settings;
+            });
+
+            closeModal('boilerModal');
+        }
+    </script>
+
+</body>
+</html>
